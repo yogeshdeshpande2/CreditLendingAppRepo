@@ -1,0 +1,64 @@
+BASE_PATH:
+  HOME_PATH: "dbfs:/mnt/dataengg"
+  LOG_PATH:  "dbfs:/mnt/dataengg/log"
+  UNITTESTS: "dbfs:/mnt/unittests"
+  JARS: "dbfs:/mnt/jars"
+
+APP_PATHS:
+  - &BRONZE_CLIENTS       dbfs:/mnt/bronze/clients/clients_20240220/clients
+  - &BRONZE_COLLATERAL    dbfs:/mnt/bronze/collaterals/collaterals_20240220
+  - &BRONZE_STOCKS        dbfs:/mnt/bronze/stocks/stocks_20240219
+
+  - &SILVER_CLIENTS       dbfs:/mnt/silver/clients
+  - &SILVER_COLLATERAL    dbfs:/mnt/silver/collaterals
+  - &SILVER_STOCKS        dbfs:/mnt/silver/stocks
+
+  - &GOLD_COLLATERAL_STATUS          dbfs:/mnt/gold/collateral_status
+
+BRONZE_TO_SILVER:
+  SOURCES:
+    CLIENTS:
+      NAME:  "clients"
+      SOURCE: *BRONZE_CLIENTS
+      TARGET: *SILVER_CLIENTS
+    COLLATERALS:
+      NAME:  "collaterals"
+      SOURCE: *BRONZE_COLLATERAL
+      TARGET: *SILVER_COLLATERAL
+    STOCKS:
+      NAME:  "stocks"
+      SOURCE: *BRONZE_STOCKS
+      TARGET: *SILVER_STOCKS
+  DATAQUALITY:
+    RULES:
+      - RULE:
+          ruleno: 1
+          rulename: "NOT_NULL"
+          tablename: "clients"
+          columnname: "client_id"
+          values: ""
+      - RULE:
+          ruleno: 2
+          rulename: "CHECK"
+          tablename: "clients"
+          columnname: "income_type"
+          values: ['business', 'salaried']
+      - RULE:
+          ruleno: 3
+          rulename: "POSITIVE_VALUE"
+          tablename: "clients"
+          columnname: "income"
+          values: ""
+
+SILVER_TO_GOLD:
+  SOURCES:
+    CLIENTS:
+      NAME: "clients"
+      PATH: *SILVER_CLIENTS
+    COLLATERALS:
+      NAME: "collaterals"
+      PATH: *SILVER_COLLATERAL
+    STOCKS:
+      NAME: "stocks"
+      PATH: *SILVER_STOCKS
+  TARGET: *GOLD_COLLATERAL_STATUS
