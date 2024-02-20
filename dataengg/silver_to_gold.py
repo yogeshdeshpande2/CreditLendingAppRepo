@@ -71,8 +71,10 @@ class SilverToGold:
                 print("3. df_stocks = ")
                 self.df_stocks.show()
 
-        df_target = self.build_collateral_status()
-        print("Joined df_target = ")
-        df_target.show()
+        df_to_gold= self.build_collateral_status()
+        print(f"Target gold path = {self.local_configs_target}")
+        df_to_gold.show()
 
+        self.logger.info("Writing the curated data to Gold  layer in delta format")
 
+        # Utilities.write_delta(df_to_gold, self.local_configs_target)

@@ -29,27 +29,13 @@ class Utilities:
             return data
 
     @staticmethod
-    def get_spark_session(jar_path):
-
-        jar_path = ", ".join(glob.glob(f"{jar_path}\\*jar"))
-
+    def get_spark_session():
         spark = (
             SparkSession
             .builder
             .appName('BITS_HousingApp')
-            .config("spark.jars", jar_path)
-            .config("spark.debug.maxToStringFields", 500)
-            .config("spark.sql.debug.maxToStringFields", 500)
-            .config("spark.executor.processTreeMetrics.enabled", "false")
-            .config("spark.sql.extensions", "io.delta.sql.DeltaSparkSessionExtension")
-            .config("spark.sql.catalog.spark_catalog", "org.apache.spark.sql.delta.catalog.DeltaCatalog")
-            .config("spark.driver.maxResultSize", "4g")  # Added as broadcasting bid trans final df writing size
-            .config("spark.rpc.message.maxSize", "1024")
-            .config("spark.driver.memory", "6g")
-            .config("spark.executor.memory", "4g")
             .getOrCreate())
 
-        sys.path.insert(1, jar_path)
         return spark
 
 
