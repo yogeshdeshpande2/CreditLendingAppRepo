@@ -1,0 +1,42 @@
+BASE_PATH:
+  HOME_PATH: "dbfs:/mnt/dataengg"
+  LOG_PATH:  "dbfs:/mnt/dataengg/log"
+  UNITTESTS: "dbfs:/mnt/unittests"
+  JARS: "dbfs:/mnt/jars"
+
+APP_PATHS:
+  - &BRONZE_CLIENTS       dbfs:/mnt/bronze/clients/clients_20240220/clients
+  - &BRONZE_COLLATERAL    dbfs:/mnt/bronze/collaterals/collaterals_20240219
+  - &BRONZE_STOCKS        dbfs:/mnt/bronze/stocks/stocks_20240219
+
+  - &SILVER_CLIENTS       dbfs:/mnt/silver/clients
+  - &SILVER_COLLATERAL    dbfs:/mnt/silver/collaterals
+  - &SILVER_STOCKS        dbfs:/mnt/silver/stocks
+
+  - &GOLD_COLLATERAL_STATUS          dbfs:/mnt/gold/collateral_status
+
+BRONZE_TO_SILVER:
+  CLIENTS:
+    SOURCE: *BRONZE_CLIENTS
+    TARGET: *SILVER_CLIENTS
+  COLLATERALS:
+    SOURCE: *BRONZE_COLLATERAL
+    TARGET: *SILVER_COLLATERAL
+  STOCKS:
+    SOURCE: *BRONZE_STOCKS
+    TARGET: *SILVER_STOCKS
+
+SILVER_TO_GOLD:
+  COLLATERAL_STATUS:
+    SOURCE:
+      CLIENTS: *SILVER_CLIENTS
+      COLLATERAL: *SILVER_COLLATERAL
+      STOCKS : *SILVER_STOCKS
+    TARGET: *GOLD_COLLATERAL_STATUS
+
+DATA_QUALITY:
+  SOURCES:
+    CLIENTS:  *BRONZE_CLIENTS
+    STOCKS:   *BRONZE_STOCKS
+    COLLATERALS: *BRONZE_COLLATERAL
+  BASE_PATH:  "dbfs:/mnt/dataengg/data-quality\\gx"

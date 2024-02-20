@@ -1,0 +1,28 @@
+TARGET_BASE_PATH: "dbfs:/mnt/dataengg/data-quality"
+
+GLOBAL_RULES:
+  - name: "positive_values"
+    expectation_type: "expect_column_values_to_be_between"
+    kwargs:
+      min_value: 0
+      max_value: 1000000
+
+  - name: "not_null"
+    expectation_type: "expect_column_values_to_not_be_null"
+
+  - name: "type_in_list_income"
+    expectation_type: "expect_column_values_to_be_in_set"
+    kwargs:
+      value: ['business', 'salaried']
+
+TABLES:
+  - name: "clients"
+    columns:
+      - name: "client_id"
+        rule: "not_null"
+
+      - name: "income_type"
+        rule: "type_in_list_income"
+
+      - name: "income"
+        rule: "positive_values"
