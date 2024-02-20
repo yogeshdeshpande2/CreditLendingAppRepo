@@ -58,10 +58,9 @@ class BronzeToSilver:
                         dq_comments = f"Rule Number: {rule_no}, Rule Name: {rule_name}, Column Name: {column_name}"
                         df = df.withColumn('comments', psf.when(psf.col(column_name).isNull(), psf.lit(dq_comments))
                                            .otherwise(psf.col('comments')))
-                else:
-                    continue
 
             df_to_silver = df.filter(psf.col('dq_check') == 'PASS')
+            df_to_silver.show()
             print("Writing to Silver layers in delta format")
 
             Utilities.write_delta(df_to_silver, target_path)

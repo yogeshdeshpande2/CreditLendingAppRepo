@@ -6,7 +6,7 @@ BASE_PATH:
 
 APP_PATHS:
   - &BRONZE_CLIENTS       dbfs:/mnt/bronze/clients/clients_20240220/clients
-  - &BRONZE_COLLATERAL    dbfs:/mnt/bronze/collaterals/collaterals_20240219
+  - &BRONZE_COLLATERAL    dbfs:/mnt/bronze/collaterals/collaterals_20240220
   - &BRONZE_STOCKS        dbfs:/mnt/bronze/stocks/stocks_20240219
 
   - &SILVER_CLIENTS       dbfs:/mnt/silver/clients
@@ -50,18 +50,15 @@ BRONZE_TO_SILVER:
           columnname: "income"
           values: ""
 
-
 SILVER_TO_GOLD:
-  COLLATERAL_STATUS:
-    SOURCE:
-      CLIENTS: *SILVER_CLIENTS
-      COLLATERAL: *SILVER_COLLATERAL
-      STOCKS : *SILVER_STOCKS
-    TARGET: *GOLD_COLLATERAL_STATUS
-
-DATA_QUALITY:
   SOURCES:
-    CLIENTS:  *BRONZE_CLIENTS
-    STOCKS:   *BRONZE_STOCKS
-    COLLATERALS: *BRONZE_COLLATERAL
-  BASE_PATH:  "dbfs:/mnt/dataengg/data-quality\\gx"
+    CLIENTS:
+      NAME: "clients"
+      PATH: *SILVER_CLIENTS
+    COLLATERALS:
+      NAME: "collaterals"
+      PATH: *SILVER_COLLATERAL
+    STOCKS:
+      NAME: "stocks"
+      PATH: *SILVER_STOCKS
+  TARGET: *GOLD_COLLATERAL_STATUS
