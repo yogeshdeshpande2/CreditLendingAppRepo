@@ -1,0 +1,9 @@
+client_id;savings;cars;stocks;balance
+1;21000;"Toyota Camry;Honda Civic";"AAPL,GOOGL,MSFT";30000
+2;22000;"Ford Mustang";"TSLA,MSFT";31000
+3;23000;"Jeep Wrangler";"FB,AAPL";32000
+4;1000;"Tesla Model S; BMW X5";"FB";330000
+5;20000;"Subaru Outback; Jeep Wrangler";"GOOGL,MSFT";34000
+6;33000;"Honda Civic";"MSFT";35000
+7;1000;"Tesla Model S";"GOOGL";38000
+8;35000;"Subaru Outback";"MSFT";40000

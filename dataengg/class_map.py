@@ -2,7 +2,9 @@ class ClassMap:
 
     @staticmethod
     def get_class_map():
-
+        """
+        Purpose: This method gives the class to be called for the argument passed to Main.py from ADF
+        """
         # Import all the necessary classes
         from bronze_to_silver import BronzeToSilver
         from silver_to_gold import SilverToGold
