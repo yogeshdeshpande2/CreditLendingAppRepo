@@ -10,9 +10,10 @@ import sys
 import os
 from utils import Utilities
 import yaml
+
+
 class Main():
     def __init__(self, arg_list):
-        # arg_dict = arg_list[0]    # ast.literal_eval(args_list[0])    # ADF format args list
         arg_dict = {}
         arg_dict['module_name'] = arg_list[1]    # class to be executed
 
@@ -26,17 +27,6 @@ class Main():
         with open(self.master_config) as yaml_file:
             configs = yaml.load(yaml_file, Loader=yaml.BaseLoader)
 
-        # self.app_base_dataengg = "".join(configs['BASE_PATH']['HOME_PATH'])
-        # self.app_base_log = "".join(configs['BASE_PATH']['LOG_PATH'])
-        # self.app_base_jar = "".join(configs['BASE_PATH']['JARS'])
-        # self.app_base_unittest = "".join(configs['BASE_PATH']['UNITTESTS'])
-        # self.app_base_app_path = "".join(configs['APP_PATHS'])
-        # self.app_base_bronze_to_silver = "".join(configs['BRONZE_TO_SILVER'])
-        # self.app_base_silver_to_gold = "".join(configs['SILVER_TO_GOLD'])
-        #
-        # for key, value in self.__dict__.items():
-        #     if 'app_base' in key:
-        #         arg_dict[key] = value
         arg_dict['spark'] = spark
 
         logging.info("[Main] Getting the class from the class-map")
