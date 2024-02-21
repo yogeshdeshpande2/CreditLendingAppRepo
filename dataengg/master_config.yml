@@ -5,9 +5,9 @@ BASE_PATH:
   JARS: "dbfs:/mnt/jars"
 
 APP_PATHS:
-  - &BRONZE_CLIENTS       dbfs:/mnt/bronze/clients/clients_20240220
-  - &BRONZE_COLLATERAL    dbfs:/mnt/bronze/collaterals/collaterals_20240220
-  - &BRONZE_STOCKS        dbfs:/mnt/bronze/stocks/stocks_20240220
+  - &BRONZE_CLIENTS       dbfs:/mnt/bronze/clients/clients
+  - &BRONZE_COLLATERAL    dbfs:/mnt/bronze/collaterals/collaterals
+  - &BRONZE_STOCKS        dbfs:/mnt/bronze/stocks/stocks
 
   - &SILVER_CLIENTS       dbfs:/mnt/silver/clients
   - &SILVER_COLLATERAL    dbfs:/mnt/silver/collaterals

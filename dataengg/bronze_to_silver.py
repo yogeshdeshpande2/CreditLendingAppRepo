@@ -1,5 +1,6 @@
 from utils import Utilities
 from pyspark.sql import functions as psf
+from datetime import datetime
 
 class BronzeToSilver:
     def __init__(self, *args, **kwargs):
@@ -17,12 +18,19 @@ class BronzeToSilver:
         Purpose: This is the starting point of this class called from Main
         :return:
         """
+
+        # Get current date
+        current_date = datetime.now().strftime("%Y%m%d")
+
         # Read each source from the Bronze layer
         for source_entity in self.local_configs_sources:
             self.logger.info(f"Processing source- {source_entity}")
             source_name = self.local_configs_sources[source_entity]['NAME']
             source_path = self.local_configs_sources[source_entity]['SOURCE']
             target_path = self.local_configs_sources[source_entity]['TARGET']
+
+            source_path = source_path + f'_{current_date}'
+
             self.logger.info(f"Source path = {source_path}")
             self.logger.info(f"Target path = {target_path}")
 
