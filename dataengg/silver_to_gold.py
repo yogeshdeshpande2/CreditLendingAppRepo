@@ -1,6 +1,4 @@
 from utils import Utilities
-from pyspark.sql import functions as psf
-
 
 class SilverToGold:
     def __init__(self, *args, **kwargs):
@@ -30,9 +28,14 @@ class SilverToGold:
         return df_target
 
     def build_collateral_status(self):
+        """
+        Purpose: Creates the final collateral status table to be consumed by BI or end users
+        :param: None
+        :return: target dataframe
+        """
         df_target = self.df_clients.join(self.df_collaterals, "client_id", "inner")
         df_target = df_target.join(self.df_stocks, "stock", "inner")
-        return  df_target
+        return df_target
 
     def execute(self):
         """
@@ -50,8 +53,7 @@ class SilverToGold:
             # Derive the clients dataframe
             if source_name == 'clients':
                 self.df_clients = Utilities.read_delta(self.spark, file=source_path)
-                print("1. df_clients = ")
-                self.df_clients.show()
+                # self.df_clients.show()
 
             # Derive the collaterals dataframe
             if source_name == 'collaterals':
@@ -59,20 +61,23 @@ class SilverToGold:
 
                 # Explode at the stocks as one client can have multiple stocks
                 self.df_collaterals = self.explode_df(self.df_collaterals)
-                # df_collaterals_pd = df_collaterals.toPandas()
-                # df_collaterals = df_collaterals_pd.assign(stocks=df_collaterals_pd['stocks'].str.split(',')).explode('stocks')
-                # df_collaterals = self.spark.createDataFrame(df_collaterals)
-                print("2. df_collaterals = ")
-                self.df_collaterals.show()
+                # self.df_collaterals.show()
 
             # Derive the stocks dataframe
             if source_name == 'stocks':
                 self.df_stocks = Utilities.read_delta(self.spark, file=source_path)
-                print("3. df_stocks = ")
-                self.df_stocks.show()
+                # self.df_stocks.show()
 
-        df_target = self.build_collateral_status()
-        print("Joined df_target = ")
-        df_target.show()
+        df_to_gold = self.build_collateral_status()
+        select_columns = ['client_id', 'first_name', 'last_name',
+                          # 'email', 'phone', 'address1', 'address2', 'city', 'zipcode',
+                          # 'corporate_name', 'role', 'income_type', 'income',
+                          'Date', 'stock', 'price'
+                          ]
 
+        df_to_gold = df_to_gold.select(select_columns)
+        # df_to_gold.show()
 
+        self.logger.info(f"Target path = {self.local_configs_target}")
+        self.logger.info("Writing the curated data to Gold layer in delta format")
+        Utilities.write_delta(df_to_gold, self.local_configs_target)
