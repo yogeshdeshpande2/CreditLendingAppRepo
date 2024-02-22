@@ -29,7 +29,7 @@ class Utilities:
         spark = (
             SparkSession
             .builder
-            .appName('BITS_HousingApp')
+            .appName('CreditLendingApp')
             .getOrCreate())
 
         return spark
