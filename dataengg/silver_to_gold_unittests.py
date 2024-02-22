@@ -3,33 +3,41 @@ from unittest.mock import patch, MagicMock
 from pyspark.sql import SparkSession, DataFrame
 from silver_to_gold import SilverToGold
 from pyspark.sql import functions as psf
+from pandas.testing import assert_frame_equal
 
 class TestSilverToGold(unittest.TestCase):
-    @patch('bronze_to_silver.Utilities')
-    @patch('bronze_to_silver.psf')
-    def test_execute(self, mock_psf, mock_utilities):
-        # Mock SparkSession
-        mock_spark = MagicMock(spec=SparkSession)
+    spark = (
+        SparkSession
+        .builder
+        .appName('CreditLendingAppUnittests')
+        .getOrCreate())
 
-        # Mock input arguments
-        arg_dict = {'logger': MagicMock()}
-        configs = {
-            'SILVER_TO_GOLD': {
-                'SOURCES': {
-                    'source1': {
-                        'NAME': 'source1',
-                        'PATH': 'source1_path',
-                        'TARGET': 'target_path'
-                    }
-                },
-                'TARGET': "target_path"
-            }
-        }
-        kwargs = {'arg_dict': arg_dict, 'configs': configs, 'spark': mock_spark}
-        # Mock read_parquet and write_delta methods
-        mock_utilities.read_delta.return_value = mock_spark.createDataFrame([(1, 'data1'), (2, 'data2')], ['column1', 'column2'])
-        mock_utilities.write_delta.return_value = None
+    def test_calc_collateral_status_detail(self):
+        df_inp = self.spark.createDataFrame([(2, 10.0)], ["units", "price"])
+        df_actual = SilverToGold.calc_collateral_status_detail(self, df_inp)
 
+        df_expected = self.spark.createDataFrame([(2, 10.0, 20.0)], ["units", "price", "stocks_value"])
+
+        df_actual_pd = df_actual.toPandas()
+        df_expected_pd = df_expected.toPandas()
+
+        # Assert if DataFrames are equal
+        assert_frame_equal(df_actual_pd, df_expected_pd)
+
+    def test_calc_collateral_status(self):
+        df_inp = self.spark.createDataFrame([(1, 'A', 'B', '2024-02-21', 'GOOG', 1000.00),
+                                             (1, 'A', 'B', '2024-02-21', 'MSFT', 2000.00)],
+                                            ['client_id', 'first_name', 'last_name', 'Date', 'stock', 'stocks_value'])
+        df_actual = SilverToGold.calc_collateral_status(self, df_inp)
+
+        df_expected = self.spark.createDataFrame([(1, 'A', 'B', '2024-02-21', 3000.00)],
+                                                 ['client_id', 'first_name', 'last_name', 'Date', 'stocks_value'])
+
+        df_actual_pd = df_actual.toPandas()
+        df_expected_pd = df_expected.toPandas()
+
+        # Assert if DataFrames are equal
+        assert_frame_equal(df_actual_pd, df_expected_pd)
 
 if __name__ == '__main__':
     unittest.main()

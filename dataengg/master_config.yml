@@ -13,6 +13,7 @@ APP_PATHS:
   - &SILVER_COLLATERAL    dbfs:/mnt/silver/collaterals
   - &SILVER_STOCKS        dbfs:/mnt/silver/stocks
 
+  - &GOLD_COLLATERAL_STATUS_DETAIL   dbfs:/mnt/gold/collateral_status_detail
   - &GOLD_COLLATERAL_STATUS          dbfs:/mnt/gold/collateral_status
 
 BRONZE_TO_SILVER:
@@ -61,4 +62,5 @@ SILVER_TO_GOLD:
     STOCKS:
       NAME: "stocks"
       PATH: *SILVER_STOCKS
+  TARGET_DETAIL: *GOLD_COLLATERAL_STATUS_DETAIL
   TARGET: *GOLD_COLLATERAL_STATUS
